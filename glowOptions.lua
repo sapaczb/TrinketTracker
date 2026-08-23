@@ -1,19 +1,15 @@
 local addonName, TT = ...
-
--- Global/Upvalued variables for tracking state
 local glowPopup
 local popupSliders = {}
 local glowActive = false
 local popupTitle
 
 local function BuildGlowPopup()
-	-- Wipe previous sliders
 	for _, settings in ipairs(popupSliders) do
 		settings:Hide()
 		settings:SetParent(nil)
 	end
 	popupSliders = {}
-
 	local type = TTDB.glowType
 	local settings = TTDB.glowSettings[type]
 	if not settings or type == "none" then
@@ -22,9 +18,7 @@ local function BuildGlowPopup()
 		end
 		return
 	end
-
 	popupTitle:SetText(type:sub(1, 1):upper() .. type:sub(2) .. " Glow Settings")
-
 	local y = -30
 	local function AddSlider(label, key, min, max, isFloat)
 		local popupSlider = AursUI.CreateSlider(glowPopup, label, 15, y, min, max, function()
@@ -45,7 +39,7 @@ local function BuildGlowPopup()
 		y = y - 60
 	end
 
-	local colorSwatch = AursUI.CreateColorSwatch(glowPopup, function()
+	local colorSwatch = AursUI.CreateColorSwatch(glowPopup, 15, y, function()
 		return settings.r, settings.g, settings.b
 	end, function(r, g, b)
 		settings.r, settings.g, settings.b = r, g, b
@@ -58,18 +52,14 @@ local function BuildGlowPopup()
 			end
 		end
 	end)
-	colorSwatch:ClearAllPoints()
-	colorSwatch:SetPoint("TOPLEFT", glowPopup, "TOPLEFT", 15, y)
 
 	local colorLabel = glowPopup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	colorLabel:SetPoint("LEFT", colorSwatch, "RIGHT", 8, 0)
 	colorLabel:SetText("Color")
 	colorLabel:SetTextColor(0.9, 0.9, 0.9, 1)
-
 	table.insert(popupSliders, colorSwatch)
 	table.insert(popupSliders, colorLabel)
 	y = y - 55
-
 	if type == "button" then
 		AddSlider("Frequency", "frequency", 1, 100, true)
 	elseif type == "pixel" then
@@ -80,7 +70,6 @@ local function BuildGlowPopup()
 		AddSlider("Particles", "particles", 1, 40, false)
 		AddSlider("Frequency", "frequency", 1, 100, true)
 	end
-
 	glowPopup:SetHeight(math.abs(y) + 20)
 end
 
@@ -99,15 +88,12 @@ function TT.InitGlowOptions(panel, layoutEngine)
 	glowPopup:SetBackdropBorderColor(1, 0.4, 0, 0.6)
 	glowPopup:SetFrameLevel(panel:GetFrameLevel() + 20)
 	glowPopup:Hide()
-
 	popupTitle = glowPopup:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	popupTitle:SetPoint("TOP", 0, -10)
 	popupTitle:SetTextColor(1, 0.4, 0, 1)
-
 	glowPopup:SetScript("OnShow", function()
 		BuildGlowPopup()
 	end)
-
 	local testGlowButtonRow = layoutEngine:Row({
 		{
 			type = "button",
@@ -135,7 +121,6 @@ function TT.InitGlowOptions(panel, layoutEngine)
 			end,
 		},
 	})
-
 	testGlowButtonRow:ClearAllPoints()
 	testGlowButtonRow:SetPoint("TOPLEFT", glowDropdown, "BOTTOMLEFT", 0, -8)
 end

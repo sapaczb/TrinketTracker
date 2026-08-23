@@ -1,3 +1,10 @@
+## [2.0.7] - 2026-08-23
+
+### Fixed
+- Fixed the colorswatch not working for the glow
+
+---
+
 ## [2.0.6] - 2026-07-29
 
 ### Added
